@@ -243,23 +243,27 @@ def summarize():
     if not text:
         return jsonify({'error': 'Aucun texte fourni'}), 400
 
-    summary = ai_processor.summarize(text, max_words, style, format_type)
-    
-    # Sauvegarder dans l'historique si l'utilisateur est connecté
-    user_id = get_current_user_id()
-    if user_id and summary:
-        db.save_summary(
-            user_id=user_id,
-            original_text=text,
-            summary=summary,
-            filename=current_filename,
-            max_words=max_words,
-            style=style,
-            format_type=format_type
-        )
-        current_filename = None
-
-    return jsonify({'success': True, 'summary': summary})
+    try:
+        summary = ai_processor.summarize(text, max_words, style, format_type)
+        # Sauvegarder dans l'historique si l'utilisateur est connecté
+        user_id = get_current_user_id()
+        if user_id and summary:
+            db.save_summary(
+                user_id=user_id,
+                original_text=text,
+                summary=summary,
+                filename=current_filename,
+                max_words=max_words,
+                style=style,
+                format_type=format_type
+            )
+            current_filename = None
+        return jsonify({'success': True, 'summary': summary})
+    except Exception as e:
+        import traceback
+        print('Erreur dans /summarize:', e)
+        traceback.print_exc()
+        return jsonify({'success': False, 'error': f'Erreur serveur: {str(e)}'}), 500
 
 
 @app.route('/translate', methods=['POST'])
