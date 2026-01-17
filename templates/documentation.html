@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - Nectar</title>
+    <link rel="icon" type="image/svg+xml" href="/N_noire.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" type="image/svg+xml" href="/N_blanc.svg" media="(prefers-color-scheme: dark)">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --bg-card: #12121a;
+            --bg-hover: #1a1a24;
+            --border: #2a2a3a;
+            --text: #ffffff;
+            --text-dim: #8888a0;
+            --primary: #7c3aed;
+            --primary-glow: rgba(124, 58, 237, 0.3);
+            --accent: #06d6a0;
+            --accent-glow: rgba(6, 214, 160, 0.2);
+            --code-bg: #1e1e2e;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --navbar-bg: rgba(10, 10, 15, 0.95);
+        }
+        
+        /* Light mode */
+        body.light-mode {
+            --bg: #f5f5f7;
+            --bg-card: #ffffff;
+            --bg-hover: #f0f0f5;
+            --border: #e0e0e8;
+            --text: #1a1a2e;
+            --text-dim: #6b6b80;
+            --code-bg: #f0f0f5;
+            --navbar-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.7;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border);
+            background: var(--navbar-bg);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .brand-logo {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary), #a855f7);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .brand-logo svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .brand-accent {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--text);
+        }
+
+        .nav-link.active {
+            color: var(--accent);
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .btn-back:hover {
+            border-color: var(--primary);
+            background: var(--bg-hover);
+        }
+
+        .btn-back svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Layout */
+        .doc-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            border-right: 1px solid var(--border);
+            padding: 2rem 1.5rem;
+            position: sticky;
+            top: 65px;
+            height: calc(100vh - 65px);
+            overflow-y: auto;
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-dim);
+            margin-bottom: 0.75rem;
+            padding-left: 0.75rem;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.6rem 0.75rem;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.9rem;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s;
+        }
+
+        .sidebar-nav a:hover {
+            color: var(--text);
+            background: var(--bg-card);
+        }
+
+        .sidebar-nav a.active {
+            color: var(--accent);
+            background: var(--accent-glow);
+        }
+
+        .sidebar-nav svg {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        /* Content */
+        .doc-content {
+            padding: 3rem 4rem;
+            max-width: 900px;
+        }
+
+        .doc-header {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .doc-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--text), var(--text-dim));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .doc-header p {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+        }
+
+        .version-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.8rem;
+            background: var(--accent-glow);
+            border: 1px solid var(--accent);
+            border-radius: 50px;
+            font-size: 0.75rem;
+            color: var(--accent);
+            margin-top: 1rem;
+        }
+
+        /* Sections */
+        .doc-section {
+            margin-bottom: 4rem;
+        }
+
+        .doc-section h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text);
+        }
+
+        .doc-section h2 svg {
+            width: 24px;
+            height: 24px;
+            color: var(--primary);
+        }
+
+        .doc-section h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+            color: var(--text);
+        }
+
+        .doc-section p {
+            color: var(--text-dim);
+            margin-bottom: 1rem;
+        }
+
+        /* Cards */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-glow);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .feature-icon svg {
+            width: 24px;
+            height: 24px;
+            color: var(--primary);
+        }
+
+        .feature-card h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-card p {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin: 0;
+        }
+
+        /* Code blocks */
+        .code-block {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 1.25rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        .code-block code {
+            font-family: 'Fira Code', 'Monaco', monospace;
+            font-size: 0.85rem;
+            color: var(--accent);
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            background: var(--bg-hover);
+            border-bottom: 1px solid var(--border);
+            border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+            margin-bottom: -1px;
+        }
+
+        .code-header span {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Lists */
+        .doc-list {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .doc-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-dim);
+        }
+
+        .doc-list li:last-child {
+            border-bottom: none;
+        }
+
+        .doc-list li svg {
+            width: 20px;
+            height: 20px;
+            color: var(--accent);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .doc-list li strong {
+            color: var(--text);
+        }
+
+        /* Table */
+        .doc-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        .doc-table th,
+        .doc-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .doc-table th {
+            background: var(--bg-card);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-dim);
+        }
+
+        .doc-table td {
+            color: var(--text-dim);
+        }
+
+        .doc-table td code {
+            background: var(--code-bg);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: var(--accent);
+        }
+
+        /* Alert boxes */
+        .alert {
+            display: flex;
+            gap: 1rem;
+            padding: 1.25rem;
+            border-radius: var(--radius-sm);
+            margin: 1.5rem 0;
+        }
+
+        .alert svg {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .alert-info {
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid var(--primary);
+        }
+
+        .alert-info svg {
+            color: var(--primary);
+        }
+
+        .alert-success {
+            background: var(--accent-glow);
+            border: 1px solid var(--accent);
+        }
+
+        .alert-success svg {
+            color: var(--accent);
+        }
+
+        .alert-content h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .alert-content p {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin: 0;
+        }
+
+        /* Steps */
+        .steps {
+            margin: 1.5rem 0;
+        }
+
+        .step {
+            display: flex;
+            gap: 1.25rem;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .step:last-child {
+            border-bottom: none;
+        }
+
+        .step-number {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary), #a855f7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-content p {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            margin: 0;
+        }
+
+        /* Footer */
+        .doc-footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .doc-footer p {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        .doc-footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .doc-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .doc-content {
+                padding: 2rem 1.5rem;
+            }
+
+            .doc-header h1 {
+                font-size: 2rem;
+            }
+        }
+        
+        /* Theme toggle */
+        .btn-theme {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+            transition: all 0.2s;
+            margin-right: 1rem;
+        }
+        
+        .btn-theme:hover {
+            border-color: var(--primary);
+            background: var(--bg-hover);
+        }
+        
+        .btn-theme svg {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .nav-actions {
+            display: flex;
+            align-items: center;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+<script>
+    // Charger le thème sauvegardé immédiatement
+    (function() {
+        const savedTheme = localStorage.getItem('nectar-theme') || 'dark';
+        if (savedTheme === 'light') document.body.classList.add('light-mode');
+    })();
+</script>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="/" class="nav-brand">
+            <div class="brand-logo">
+                <img src="/N.svg" alt="Nectar" width="24" height="24">
+            </div>
+            <span>Nectar</span>
+        </a>
+        <div class="nav-links">
+            <a href="#introduction" class="nav-link active">Guide</a>
+            <a href="#api" class="nav-link">API</a>
+            <a href="#faq" class="nav-link">FAQ</a>
+        </div>
+        <div class="nav-actions">
+            <button class="btn-theme" id="themeToggle" title="Changer le thème" aria-label="Changer le thème">
+                <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg class="icon-moon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
+            <a href="/" class="btn-back">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Retour à l'app
+            </a>
+        </div>
+    </nav>
+
+    <div class="doc-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Démarrage</div>
+                <ul class="sidebar-nav">
+                    <li>
+                        <a href="#introduction" class="active">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                            </svg>
+                            Introduction
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#features">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                            </svg>
+                            Fonctionnalités
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#quickstart">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                            </svg>
+                            Guide rapide
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Référence</div>
+                <ul class="sidebar-nav">
+                    <li>
+                        <a href="#formats">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                            </svg>
+                            Formats supportés
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#api">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="16 18 22 12 16 6"></polyline>
+                                <polyline points="8 6 2 12 8 18"></polyline>
+                            </svg>
+                            API Reference
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#settings">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                            </svg>
+                            Paramètres
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">Support</div>
+                <ul class="sidebar-nav">
+                    <li>
+                        <a href="#faq">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                            </svg>
+                            FAQ
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="doc-content">
+            <header class="doc-header" id="introduction">
+                <h1>Documentation Nectar</h1>
+                <p>Guide complet pour utiliser notre outil de résumé intelligent de documents propulsé par OpenAI.</p>
+                <div class="version-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5"></path>
+                        <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                    Version 1.0.0
+                </div>
+            </header>
+
+            <!-- Features Section -->
+            <section class="doc-section" id="features">
+                <h2>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                    Fonctionnalités
+                </h2>
+                <p>Nectar offre une suite complète d'outils pour l'analyse et le résumé de documents.</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                            </svg>
+                        </div>
+                        <h4>Multi-formats</h4>
+                        <p>Support des fichiers PDF, DOCX et TXT jusqu'à 16 MB.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M8 12h8"></path>
+                                <path d="M12 8v8"></path>
+                            </svg>
+                        </div>
+                        <h4>Longueur personnalisable</h4>
+                        <p>Ajustez la taille du résumé de 50 à 500 mots selon vos besoins.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                <path d="M2 17l10 5 10-5"></path>
+                                <path d="M2 12l10 5 10-5"></path>
+                            </svg>
+                        </div>
+                        <h4>IA OpenAI</h4>
+                        <p>Résumés intelligents générés par GPT-4o mini d'OpenAI.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                        </div>
+                        <h4>Export facile</h4>
+                        <p>Copiez ou téléchargez votre résumé en un clic.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Start Section -->
+            <section class="doc-section" id="quickstart">
+                <h2>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    Guide rapide
+                </h2>
+                <p>Commencez à utiliser Nectar en quelques étapes simples.</p>
+
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Téléchargez votre document</h4>
+                            <p>Glissez-déposez ou cliquez pour sélectionner un fichier PDF, DOCX ou TXT. La taille maximale est de 16 MB.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Extrayez le texte</h4>
+                            <p>Cliquez sur "Extraire le texte" pour analyser le document. Les statistiques (mots, caractères, temps de lecture) s'affichent automatiquement.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Configurez la longueur</h4>
+                            <p>Utilisez le curseur pour définir le nombre de mots souhaité pour votre résumé (entre 50 et 500 mots).</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Générez le résumé</h4>
+                            <p>Cliquez sur "Générer le résumé" et laissez l'IA créer un résumé concis et pertinent de votre document.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-success">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    <div class="alert-content">
+                        <h4>Astuce</h4>
+                        <p>Pour de meilleurs résultats, utilisez des documents avec du texte bien structuré. Les documents scannés ou avec beaucoup d'images peuvent donner des résultats moins précis.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Formats Section -->
+            <section class="doc-section" id="formats">
+                <h2>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                    </svg>
+                    Formats supportés
+                </h2>
+                <p>Nectar prend en charge les formats de documents les plus courants.</p>
+
+                <table class="doc-table">
+                    <thead>
+                        <tr>
+                            <th>Format</th>
+                            <th>Extension</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>PDF</strong></td>
+                            <td><code>.pdf</code></td>
+                            <td>Documents PDF avec texte extractible (non scannés)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Word</strong></td>
+                            <td><code>.docx</code></td>
+                            <td>Documents Microsoft Word (format moderne)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Texte</strong></td>
+                            <td><code>.txt</code></td>
+                            <td>Fichiers texte brut (encodage UTF-8 recommandé)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="alert alert-info">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                    <div class="alert-content">
+                        <h4>Limite de taille</h4>
+                        <p>La taille maximale des fichiers est de 16 MB. Pour les documents plus volumineux, divisez-les en plusieurs parties.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- API Section -->
+            <section class="doc-section" id="api">
+                <h2>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="16 18 22 12 16 6"></polyline>
+                        <polyline points="8 6 2 12 8 18"></polyline>
+                    </svg>
+                    API Reference
+                </h2>
+                <p>Nectar expose une API REST simple pour l'intégration dans vos applications.</p>
+
+                <h3>POST /upload</h3>
+                <p>Télécharge un document et extrait son contenu textuel.</p>
+
+                <div class="code-header">
+                    <span>Request</span>
+                </div>
+                <div class="code-block">
+                    <code>POST /upload<br>Content-Type: multipart/form-data<br><br>file: [votre_document.pdf]</code>
+                </div>
+
+                <div class="code-header">
+                    <span>Response</span>
+                </div>
+                <div class="code-block">
+                    <code>{<br>&nbsp;&nbsp;"success": true,<br>&nbsp;&nbsp;"text": "Contenu extrait du document...",<br>&nbsp;&nbsp;"word_count": 1500,<br>&nbsp;&nbsp;"char_count": 8500,<br>&nbsp;&nbsp;"filename": "document.pdf"<br>}</code>
+                </div>
+
+                <h3>POST /summarize</h3>
+                <p>Génère un résumé du texte fourni avec la longueur spécifiée.</p>
+
+                <div class="code-header">
+                    <span>Request</span>
+                </div>
+                <div class="code-block">
+                    <code>POST /summarize<br>Content-Type: application/json<br><br>{<br>&nbsp;&nbsp;"text": "Texte à résumer...",<br>&nbsp;&nbsp;"target_words": 150<br>}</code>
+                </div>
+
+                <div class="code-header">
+                    <span>Response</span>
+                </div>
+                <div class="code-block">
+                    <code>{<br>&nbsp;&nbsp;"success": true,<br>&nbsp;&nbsp;"summary": "Résumé généré par l'IA...",<br>&nbsp;&nbsp;"word_count": 148,<br>&nbsp;&nbsp;"method": "openai",<br>&nbsp;&nbsp;"model": "gpt-4o-mini"<br>}</code>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section class="doc-section" id="settings">
+                <h2>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                    Paramètres
+                </h2>
+                <p>Configurez Nectar selon vos besoins.</p>
+
+                <ul class="doc-list">
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <div>
+                            <strong>Longueur du résumé</strong> — Ajustable entre 50 et 500 mots via le curseur. Par défaut : 150 mots.
+                        </div>
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <div>
+                            <strong>Taille max. des fichiers</strong> — 16 MB maximum par fichier uploadé.
+                        </div>
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                        <div>
+                            <strong>Langue</strong> — Support automatique du français et de l'anglais.
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- FAQ Section -->
+            <section class="doc-section" id="faq">
+                <h2>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                    Questions fréquentes
+                </h2>
+
+                <h3>Le résumé est-il fidèle au document original ?</h3>
+                <p>Oui, l'IA analyse le contenu et extrait les informations les plus importantes tout en préservant le sens original du texte.</p>
+
+                <h3>Mes documents sont-ils sécurisés ?</h3>
+                <p>Les documents uploadés sont traités localement et ne sont pas stockés de manière permanente. Le texte est envoyé à l'API OpenAI uniquement pour la génération du résumé.</p>
+
+                <h3>Pourquoi le résumé n'a pas exactement le nombre de mots demandé ?</h3>
+                <p>L'IA vise à atteindre le nombre de mots cible tout en maintenant la cohérence du texte. Le résultat peut légèrement varier pour garantir un résumé de qualité.</p>
+
+                <h3>Que faire si l'extraction échoue ?</h3>
+                <p>Vérifiez que votre PDF contient du texte extractible (pas une image scannée) et que le fichier n'est pas corrompu. Pour les fichiers DOCX, assurez-vous qu'il s'agit du format moderne (.docx) et non de l'ancien format (.doc).</p>
+
+                <h3>Y a-t-il une limite de requêtes ?</h3>
+                <p>La limite dépend de votre quota API OpenAI. En cas d'erreur, l'application bascule automatiquement sur une méthode extractive locale.</p>
+            </section>
+
+            <!-- Footer -->
+            <footer class="doc-footer">
+                <p>Made with ❤️ by csas_cheick — <a href="/">Retour à l'application</a></p>
+            </footer>
+        </main>
+    </div>
+    
+    <script>
+        // Gestion du thème
+        function initTheme() {
+            const savedTheme = localStorage.getItem('nectar-theme') || 'dark';
+            const isDark = savedTheme === 'dark';
+            document.querySelector('.icon-sun')?.classList.toggle('hidden', !isDark);
+            document.querySelector('.icon-moon')?.classList.toggle('hidden', isDark);
+        }
+        initTheme();
+        
+        document.getElementById('themeToggle')?.addEventListener('click', () => {
+            const isLight = document.body.classList.contains('light-mode');
+            document.body.classList.toggle('light-mode', !isLight);
+            localStorage.setItem('nectar-theme', isLight ? 'dark' : 'light');
+            document.querySelector('.icon-sun')?.classList.toggle('hidden', isLight);
+            document.querySelector('.icon-moon')?.classList.toggle('hidden', !isLight);
+        });
+    </script>
+</body>
+</html>

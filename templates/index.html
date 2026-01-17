@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nectar - Document Intelligence</title>
+    <link rel="icon" type="image/svg+xml" href="/N_noire.svg" media="(prefers-color-scheme: light)">
+    <link rel="icon" type="image/svg+xml" href="/N_blanc.svg" media="(prefers-color-scheme: dark)">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<script>
+    // Charger le thème sauvegardé immédiatement pour éviter le flash
+    (function() {
+        const savedTheme = localStorage.getItem('nectar-theme') || 'dark';
+        document.body.classList.add(savedTheme === 'light' ? 'light-mode' : 'dark-mode');
+    })();
+</script>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="brand-logo">
+                <img src="/N.svg" alt="Nectar" width="24" height="24">
+            </div>
+            <span>Nectar</span>
+        </div>
+        
+        <div class="nav-center">
+            <button class="nav-tab active" data-tab="summarize">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                </svg>
+                Résumé
+            </button>
+            <button class="nav-tab" data-tab="analyze">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+                Analyser
+            </button>
+            <button class="nav-tab" data-tab="tools">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+                Outils
+            </button>
+        </div>
+        
+        <div class="nav-end">
+            <button class="btn-theme" id="themeToggle" title="Changer le thème">
+                <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg class="icon-moon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
+            
+            <!-- Liens Historique et Statistiques (toujours visibles) -->
+            <a href="/history" class="nav-link auth-link" id="historyLink">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                Historique
+            </a>
+            <a href="/statistics" class="nav-link auth-link" id="statsLink">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+                Statistiques
+            </a>
+            
+            <a href="/documentation" class="nav-link">Documentation</a>
+            
+            <!-- User Section -->
+            <div class="user-section" id="userSection">
+                <!-- Si non connecté -->
+                <a href="/login" class="btn btn-login" id="loginBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                        <polyline points="10 17 15 12 10 7"></polyline>
+                        <line x1="15" y1="12" x2="3" y2="12"></line>
+                    </svg>
+                    Connexion
+                </a>
+                
+                <!-- Si connecté (caché par défaut) -->
+                <div class="user-menu hidden" id="userMenu">
+                    <button class="user-btn" id="userBtn">
+                        <div class="user-avatar" id="userAvatar">U</div>
+                        <span id="userName">Utilisateur</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <div class="user-dropdown" id="userDropdown">
+                        <a href="#" class="dropdown-item logout" id="logoutBtn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                            Déconnexion
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Banner pour utilisateurs non connectés avec Robot IA -->
+    <div class="guest-banner" id="guestBanner">
+        <div class="guest-banner-content">
+            <!-- Robot IA Animé -->
+            <div class="robot-container">
+                <div class="robot">
+                    <div class="robot-head">
+                        <div class="robot-face">
+                            <div class="robot-eye left"></div>
+                            <div class="robot-eye right"></div>
+                        </div>
+                        <div class="robot-antenna">
+                            <div class="antenna-ball"></div>
+                        </div>
+                    </div>
+                    <div class="robot-body">
+                        <div class="robot-chest">
+                            <div class="robot-heart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="guest-message">
+                <p class="guest-title">
+                    <span class="wave">👋</span> Hey ! Je suis ton assistant IA
+                </p>
+                <p class="guest-text">
+                    Je peux t'aider à résumer tes documents, mais <strong>sans compte</strong>, 
+                    je ne pourrai pas mémoriser ton historique... 
+                    <span class="sad-face">😢</span>
+                </p>
+            </div>
+            
+            <div class="guest-actions">
+                <a href="/login" class="btn-guest-login">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                        <polyline points="10 17 15 12 10 7"></polyline>
+                        <line x1="15" y1="12" x2="3" y2="12"></line>
+                    </svg>
+                    Se connecter
+                </a>
+                <a href="/login" class="btn-guest-register">
+                    Créer un compte
+                </a>
+            </div>
+            
+            <button class="guest-banner-close" id="closeBanner" title="Continuer sans compte">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <main class="app-container">
+        <!-- Sidebar - Upload & Document -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    Document
+                </h3>
+                
+                <div class="upload-box" id="uploadBox">
+                    <div class="upload-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                    </div>
+                    <p>Glissez ou cliquez</p>
+                    <div class="upload-formats">
+                        <span class="format-tag">PDF</span>
+                        <span class="format-tag">DOCX</span>
+                        <span class="format-tag">TXT</span>
+                    </div>
+                    <input type="file" id="fileInput" accept=".pdf,.docx,.txt" hidden>
+                </div>
+
+                <div class="file-info hidden" id="fileInfo">
+                    <div class="file-card">
+                        <div class="file-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                            </svg>
+                        </div>
+                        <div class="file-meta">
+                            <span class="file-name" id="fileName">document.pdf</span>
+                            <span class="file-size" id="fileSize">0 KB</span>
+                        </div>
+                        <button class="btn-icon" id="removeFile" title="Supprimer le fichier" aria-label="Supprimer le fichier">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section hidden" id="statsSection">
+                <h3 class="sidebar-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <line x1="18" y1="20" x2="18" y2="10"></line>
+                        <line x1="12" y1="20" x2="12" y2="4"></line>
+                        <line x1="6" y1="20" x2="6" y2="14"></line>
+                    </svg>
+                    Statistiques
+                </h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-value" id="statWords">0</span>
+                        <span class="stat-label">mots</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="statChars">0</span>
+                        <span class="stat-label">caractères</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="statSentences">0</span>
+                        <span class="stat-label">phrases</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="statTime">0</span>
+                        <span class="stat-label">min lecture</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    Historique
+                </h3>
+                <div class="history-list" id="historyList">
+                    <p class="empty-state">Aucun historique</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Tab: Summarize -->
+            <div class="tab-content active" id="tab-summarize">
+                <div class="content-grid">
+                    <!-- Original Text -->
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h2>Texte original</h2>
+                            <button class="btn-sm" id="clearText">Effacer</button>
+                        </div>
+                        <textarea class="text-input" id="originalText" placeholder="Collez votre texte ici ou uploadez un document..."></textarea>
+                    </div>
+
+                    <!-- Summary Settings & Result -->
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h2>Résumé</h2>
+                            <div class="header-actions">
+                                <select id="summaryStyle" class="select-sm" title="Style de résumé">
+                                    <option value="paragraph">Paragraphe</option>
+                                    <option value="bullets">Bullet points</option>
+                                    <option value="academic">Académique</option>
+                                    <option value="simple">Simplifié</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-row">
+                            <div class="slider-group">
+                                <label>
+                                    <span>Longueur:</span>
+                                    <strong id="wordTarget">150 mots</strong>
+                                </label>
+                                <input type="range" id="wordSlider" min="50" max="500" value="150" class="slider" title="Nombre de mots cible">
+                                <div class="slider-labels">
+                                    <span>50</span>
+                                    <span>500</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary btn-full" id="summarizeBtn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                <path d="M2 17l10 5 10-5"></path>
+                                <path d="M2 12l10 5 10-5"></path>
+                            </svg>
+                            Générer le résumé
+                        </button>
+
+                        <div class="result-area hidden" id="summaryResult">
+                            <div class="result-meta">
+                                <span class="chip" id="resultWords">0 mots</span>
+                                <span class="chip chip-accent" id="resultCompression">0% réduit</span>
+                                <span class="chip chip-success" id="resultMethod">OpenAI</span>
+                            </div>
+                            <textarea class="text-output" id="summaryText" readonly title="Résumé généré" placeholder="Le résumé apparaîtra ici..." aria-label="Résumé généré"></textarea>
+                            <div class="result-actions">
+                                <button class="btn btn-outline" id="copySummary">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                        <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                    Copier
+                                </button>
+                                <button class="btn btn-outline" id="downloadSummary">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="7 10 12 15 17 10"></polyline>
+                                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                                    </svg>
+                                    Télécharger
+                                </button>
+                                <button class="btn btn-outline" id="translateSummary">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                                    </svg>
+                                    Traduire
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Analyze -->
+            <div class="tab-content" id="tab-analyze">
+                <div class="analyze-grid">
+                    <!-- Keywords -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                    <line x1="4" y1="9" x2="20" y2="9"></line>
+                                    <line x1="4" y1="15" x2="20" y2="15"></line>
+                                    <line x1="10" y1="3" x2="8" y2="21"></line>
+                                    <line x1="16" y1="3" x2="14" y2="21"></line>
+                                </svg>
+                                Mots-clés
+                            </h3>
+                            <button class="btn-sm btn-primary" id="extractKeywords">Extraire</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="keywords-container" id="keywordsContainer">
+                                <p class="empty-state">Cliquez sur Extraire pour analyser</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sentiment -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                                    <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                                    <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                                </svg>
+                                Sentiment
+                            </h3>
+                            <button class="btn-sm btn-primary" id="analyzeSentiment">Analyser</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="sentiment-result" id="sentimentResult">
+                                <p class="empty-state">Cliquez sur Analyser</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Word Cloud -->
+                    <div class="card card-wide">
+                        <div class="card-header">
+                            <h3>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                    <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"></path>
+                                </svg>
+                                Nuage de mots
+                            </h3>
+                            <button class="btn-sm btn-primary" id="generateWordCloud">Générer</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="wordcloud-container" id="wordcloudContainer">
+                                <p class="empty-state">Cliquez sur Générer</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Titles -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                    <path d="M4 7V4h16v3"></path>
+                                    <path d="M9 20h6"></path>
+                                    <path d="M12 4v16"></path>
+                                </svg>
+                                Suggestions de titres
+                            </h3>
+                            <button class="btn-sm btn-primary" id="generateTitles">Générer</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="titles-list" id="titlesContainer">
+                                <p class="empty-state">Cliquez sur Générer</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Advanced Stats -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                    <path d="M21 21H3V3"></path>
+                                    <path d="M21 9l-6 6-4-4-6 6"></path>
+                                </svg>
+                                Statistiques avancées
+                            </h3>
+                            <button class="btn-sm btn-primary" id="getAdvancedStats">Calculer</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="advanced-stats" id="advancedStats">
+                                <p class="empty-state">Cliquez sur Calculer</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Tools -->
+            <div class="tab-content" id="tab-tools">
+                <div class="tools-grid">
+                    <!-- Q&A -->
+                    <div class="card card-wide">
+                        <div class="card-header">
+                            <h3>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                                </svg>
+                                Questions & Réponses
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="qa-container">
+                                <div class="qa-input">
+                                    <input type="text" id="questionInput" placeholder="Posez une question sur le document..." class="input-full">
+                                    <button class="btn btn-primary" id="askQuestion">Demander</button>
+                                </div>
+                                <div class="qa-answer" id="qaAnswer">
+                                    <p class="empty-state">Posez une question pour obtenir une réponse basée sur votre document</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Translation -->
+                    <div class="card card-wide">
+                        <div class="card-header">
+                            <h3>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                                </svg>
+                                Traduction
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="translate-container">
+                                <div class="translate-controls">
+                                    <select id="targetLanguage" class="select-full" title="Langue de traduction">
+                                        <option value="en">Anglais</option>
+                                        <option value="fr">Français</option>
+                                        <option value="es">Espagnol</option>
+                                        <option value="de">Allemand</option>
+                                        <option value="it">Italien</option>
+                                        <option value="pt">Portugais</option>
+                                        <option value="ar">Arabe</option>
+                                        <option value="zh">Chinois</option>
+                                        <option value="ja">Japonais</option>
+                                        <option value="ru">Russe</option>
+                                    </select>
+                                    <button class="btn btn-primary" id="translateText">Traduire le texte</button>
+                                </div>
+                                <div class="translation-result" id="translationResult">
+                                    <p class="empty-state">Sélectionnez une langue et cliquez sur Traduire</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section Summary -->
+                    <div class="card card-wide">
+                        <div class="card-header">
+                            <h3>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                                </svg>
+                                Résumé par sections
+                            </h3>
+                            <button class="btn-sm btn-primary" id="summarizeSections">Analyser</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="sections-result" id="sectionsResult">
+                                <p class="empty-state">Analyse le document et le divise en sections résumées</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div class="loading hidden" id="loading">
+        <div class="loading-box">
+            <div class="spinner"></div>
+            <p id="loadingMsg">Traitement en cours...</p>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <span id="toastIcon"></span>
+        <span id="toastMsg"></span>
+    </div>
+
+    <!-- Translation Modal -->
+    <div class="modal hidden" id="translateModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Traduire le résumé</h3>
+                <button class="btn-icon" id="closeTranslateModal" title="Fermer" aria-label="Fermer la modal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <select id="modalTargetLang" class="select-full" title="Langue de traduction">
+                    <option value="en">Anglais</option>
+                    <option value="fr">Français</option>
+                    <option value="es">Espagnol</option>
+                    <option value="de">Allemand</option>
+                    <option value="ar">Arabe</option>
+                </select>
+                <div class="modal-result" id="modalTranslation"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="closeModalBtn">Fermer</button>
+                <button class="btn btn-primary" id="doTranslate">Traduire</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
