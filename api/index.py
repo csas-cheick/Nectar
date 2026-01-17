@@ -244,21 +244,21 @@ def summarize():
         return jsonify({'error': 'Aucun texte fourni'}), 400
 
     try:
-        summary = ai_processor.summarize(text, max_words, style, format_type)
+        summary_result = ai_processor.summarize(text, max_words, style)
         # Sauvegarder dans l'historique si l'utilisateur est connecté
         user_id = get_current_user_id()
-        if user_id and summary:
+        if user_id and summary_result:
             db.save_summary(
                 user_id=user_id,
                 original_text=text,
-                summary=summary,
+                summary=summary_result["summary"],
                 filename=current_filename,
                 max_words=max_words,
                 style=style,
                 format_type=format_type
             )
             current_filename = None
-        return jsonify({'success': True, 'summary': summary})
+        return jsonify({'success': True, 'summary': summary_result["summary"], 'method': summary_result.get('method'), 'summary_stats': doc_processor.get_text_stats(summary_result["summary"])})
     except Exception as e:
         import traceback
         print('Erreur dans /summarize:', e)
