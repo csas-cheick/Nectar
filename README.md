@@ -1,7 +1,7 @@
 # 🤖 Nectar - AI Document Summarizer
 
 <p align="center">
-  <img src="docs/images/nectar-preview.png" alt="Nectar App Preview" width="800"/>
+  <img src="images/nectar-preview.png" alt="Nectar App Preview" width="800"/>
 </p>
 
 <p align="center">
