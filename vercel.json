@@ -15,10 +15,5 @@
       "src": "/(.*)",
       "dest": "/api/index.py"
     }
-  ],
-  "env": {
-    "OPENAI_API_KEY": "@openai-api-key",
-    "FLASK_SECRET_KEY": "@flask-secret-key",
-    "FIREBASE_CREDENTIALS": "@firebase-credentials"
-  }
+  ]
 }
