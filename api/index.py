@@ -209,7 +209,7 @@ def upload_file():
         if text:
             return jsonify({
                 'text': text,
-                'stats': doc_processor.get_stats(text),
+                'stats': doc_processor.get_text_stats(text),
                 'filename': filename
             })
         else:
@@ -226,7 +226,7 @@ def analyze_text():
     if not text:
         return jsonify({'error': 'Aucun texte fourni'}), 400
     
-    return jsonify({'stats': doc_processor.get_stats(text)})
+    return jsonify({'stats': doc_processor.get_text_stats(text)})
 
 
 @app.route('/summarize', methods=['POST'])
