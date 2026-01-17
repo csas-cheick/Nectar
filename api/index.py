@@ -208,14 +208,15 @@ def upload_file():
 
         if text:
             return jsonify({
+                'success': True,
                 'text': text,
                 'stats': doc_processor.get_text_stats(text),
                 'filename': filename
             })
         else:
-            return jsonify({'error': 'Impossible d\'extraire le texte du fichier'}), 400
+            return jsonify({'success': False, 'error': 'Impossible d\'extraire le texte du fichier'}), 400
 
-    return jsonify({'error': 'Type de fichier non autorisé'}), 400
+    return jsonify({'success': False, 'error': 'Type de fichier non autorisé'}), 400
 
 
 @app.route('/analyze', methods=['POST'])
