@@ -339,10 +339,8 @@ def get_statistics():
     return jsonify(stats)
 
 
-# Handler pour Vercel
-def handler(request):
-    return app(request)
-
+# Pour Vercel - l'app Flask doit être exposée directement
+# Vercel détectera automatiquement l'objet 'app'
 
 if __name__ == '__main__':
     app.run(debug=True)
