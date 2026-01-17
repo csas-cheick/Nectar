@@ -259,7 +259,7 @@ def summarize():
         )
         current_filename = None
 
-    return jsonify({'summary': summary})
+    return jsonify({'success': True, 'summary': summary})
 
 
 @app.route('/translate', methods=['POST'])
