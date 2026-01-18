@@ -112,8 +112,8 @@ def login():
         
         if not email or not password:
             return jsonify({'error': 'Email et mot de passe requis', 'success': False}), 400
-        
-        result = db.verify_user(email, password)
+        """//verify_user """
+        result = db.authenticate_user(email, password)
         
         if result['success']:
             session['user_id'] = result['user']['id']
